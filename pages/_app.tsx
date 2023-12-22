@@ -1,12 +1,12 @@
-import { Providers } from "@/lib/provider";
 import "@/styles/globals.css";
+import { Provider } from "react-redux";
 import type { AppProps } from "next/app";
-import { Children } from "react";
+import { store } from "@/redux/store";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Providers>
+    <Provider store={store}>
       <Component {...pageProps} />;
-    </Providers>
+    </Provider>
   );
 }

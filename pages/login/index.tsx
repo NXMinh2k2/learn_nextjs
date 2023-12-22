@@ -15,6 +15,7 @@ const Login = () => {
               name="email"
               id="email"
             />
+            <span className="mb-2 mt-4 text-md">Password</span>
             <input
               type="password"
               className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
@@ -32,10 +33,6 @@ const Login = () => {
           </div>
           <button className="w-full bg-black text-white p-2 rounded-lg mb-6 hover:bg-white hover:text-black hover:border hover:border-gray-300">
             Sign in
-          </button>
-          <button className="w-full border bg-gray-300 text-md p-2 rounded-lg mb-6 hover:bg-black hover:text-white">
-            <img src="google.svg" alt="img" className="w-6 h-6 inline mr-2" />
-            Sign in with Google
           </button>
         </div>
       </div>
