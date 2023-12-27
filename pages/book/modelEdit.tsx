@@ -1,11 +1,12 @@
-import { Book, getBooks } from "@/redux/features/book.slice";
+import { Book, editBook } from "@/redux/features/book.slice";
 import React, { useEffect, useState } from "react";
 import {
-  useAddBookMutation,
+  useEditBookMutation,
   useGetCategoriesQuery,
 } from "@/redux/features/books.slice";
 
-export interface NewBook {
+export interface updateBook {
+  _id: string;
   title: string;
   author: string;
   price: number;
@@ -14,20 +15,18 @@ export interface NewBook {
   image: unknown;
 }
 
-const Modal = ({ onClose }: any) => {
-  const { data: categories, isLoading } =
-    useGetCategoriesQuery("getCategories");
-  const [addBook] = useAddBookMutation();
-
+const ModalEdit = ({ onClose, book, categories }: any) => {
   const [avatar, setAvatar] = useState("");
+  const [editBook] = useEditBookMutation();
 
-  const [newBook, setNewBook] = useState<NewBook>({
-    title: "",
-    author: "",
-    price: 0,
-    description: "",
-    category: "",
-    image: "",
+  const [updateBook, setUpdateBook] = useState<updateBook>({
+    _id: book._id,
+    title: book.title,
+    author: book.author,
+    price: book.price,
+    description: book.description,
+    category: book.category,
+    image: book.image,
   });
 
   const handleFileChange = async (e: any) => {
@@ -39,7 +38,7 @@ const Modal = ({ onClose }: any) => {
 
         const ObjectUrl = URL.createObjectURL(file);
         setAvatar(ObjectUrl);
-        setNewBook({ ...newBook, image });
+        setUpdateBook({ ...updateBook, image });
       } catch (error) {
         console.error("Error converting file to Base64:", error);
       }
@@ -63,8 +62,8 @@ const Modal = ({ onClose }: any) => {
     });
   };
 
-  const handleAddBook = async () => {
-    await addBook(newBook);
+  const handleEdit = async (updateBook: any) => {
+    editBook(updateBook);
     onClose();
   };
 
@@ -83,9 +82,9 @@ const Modal = ({ onClose }: any) => {
             <input
               type="text"
               id="title"
-              value={newBook.title}
+              value={updateBook.title}
               onChange={(e) =>
-                setNewBook({ ...newBook, title: e.target.value })
+                setUpdateBook({ ...updateBook, title: e.target.value })
               }
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -115,9 +114,9 @@ const Modal = ({ onClose }: any) => {
             <input
               type="text"
               id="author"
-              value={newBook.author}
+              value={updateBook.author}
               onChange={(e) =>
-                setNewBook({ ...newBook, author: e.target.value })
+                setUpdateBook({ ...updateBook, author: e.target.value })
               }
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -132,9 +131,9 @@ const Modal = ({ onClose }: any) => {
             <input
               type="text"
               id="des"
-              value={newBook.description}
+              value={updateBook.description}
               onChange={(e) =>
-                setNewBook({ ...newBook, description: e.target.value })
+                setUpdateBook({ ...updateBook, description: e.target.value })
               }
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -149,9 +148,9 @@ const Modal = ({ onClose }: any) => {
             <input
               type="text"
               id="price"
-              value={newBook.price}
+              value={updateBook.price}
               onChange={(e) =>
-                setNewBook({ ...newBook, price: +e.target.value })
+                setUpdateBook({ ...updateBook, price: +e.target.value })
               }
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -165,15 +164,13 @@ const Modal = ({ onClose }: any) => {
             </label>
             <select
               id="category"
-              value={newBook.category}
+              value={updateBook.category}
               onChange={(e) =>
-                setNewBook({ ...newBook, category: e.target.value })
+                setUpdateBook({ ...updateBook, category: e.target.value })
               }
               className="w-full px-3 py-2 border rounded-md"
             >
-              {!isLoading &&
-                categories &&
-                categories.length &&
+              {categories &&
                 categories.map((category: any) => (
                   <option key={category._id} value={category.title}>
                     {category.title}
@@ -184,10 +181,10 @@ const Modal = ({ onClose }: any) => {
           <div className="flex justify-end">
             <button
               type="button"
-              onClick={handleAddBook}
+              onClick={() => handleEdit(updateBook)}
               className="bg-blue-500 text-white px-4 py-2 rounded"
             >
-              Add Book
+              Edit Book
             </button>
             <button
               type="button"
@@ -203,4 +200,4 @@ const Modal = ({ onClose }: any) => {
   );
 };
 
-export default Modal;
+export default ModalEdit;
